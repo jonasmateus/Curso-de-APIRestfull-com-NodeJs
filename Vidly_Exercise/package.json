@@ -1,0 +1,13 @@
+{
+  "name": "Vidly_Exercise",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "debug": "^4.1.1",
+    "express": "^4.17.1",
+    "joi": "^13.1.0",
+    "nodemon": "^2.0.4",
+    "yarn": "^1.22.0"
+  }
+}

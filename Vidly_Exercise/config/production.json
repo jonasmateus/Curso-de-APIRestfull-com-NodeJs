@@ -1,0 +1,6 @@
+{
+    "name" : "My_Production_Express_App",
+    "mail" : {
+        "host" :"My-Prod-Exp-App-Serv"
+    }
+}
