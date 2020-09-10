@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "config": "^3.2.5"
+    "config": "^3.2.5",
+    "mongoose": "^5.10.2"
   }
 }
