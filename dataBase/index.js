@@ -26,10 +26,11 @@ const courseSchema = new mongoose.Schema({
 const Course = mongoose.model('Course', courseSchema)
 
 async function createCourse() {
+
         const course = new Course({
                 name: 'Bootstrap Course',
-                author: 'Mosh',
                 tags: ['Bootstrap', 'frontend'],
+                author: 'Mosh',
                 isPublished: true
         })
         const result = await course.save()
@@ -40,14 +41,32 @@ async function createCourse() {
 // createCourse()
 
 async function getCourses () {
-        const courses = await Course.find({
-                author: 'Mosh', 
-                isPublished: true,
-        })
+        // eq (equal)
+        // ne (not equl)
+        // gt (greater than)
+        // gte (greater than or equal to)
+        // lt (less than)
+        // lte (less than or equal to)
+        // in 
+        // nin (not in)
+        // or 
+        // and
+
+        const courses = await Course
+        .find({ author: 'Mosh',  isPublished: true })
+        // .find({ price: { $gte: 10, $lte: 20}})
+        // .find({ price: { $in: [10, 15, 20] }})
+        // .find().or([ { author: 'Mosh' }, { isPublished: true } ]).and([ ])
+        // Starts with Mosh
+        // .find({ author: /^Mosh/})
+        // Ends with Hamedani, (case insensitive)
+        // .find({ author: /Hamendani$/i})
+        // Contains Mosh, (case insensitive)
+        // .find({ author: /.*Mosh.*/i})
         .limit(10)
         .sort({ name: 1 })
-        .select({ name: 1, tags: 1 })
+        // .select({ name: 1, tags: 1 })
+        .countDocuments()
         console.log(courses)        
 }
-
  getCourses()
