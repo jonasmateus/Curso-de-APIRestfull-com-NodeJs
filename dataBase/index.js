@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 async function connectToMongo() {
-        return await mongoose.connect('mongodb://127.0.0.1/playground', {
+        return await mongoose.connect('mongodb://localhost/playground', {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
                 useFindAndModify: false,
@@ -24,7 +24,7 @@ const courseSchema = new mongoose.Schema({
 })
 
 const Course = mongoose.model('Course', courseSchema)
-
+                
 async function createCourse() {
 
         const course = new Course({
@@ -69,4 +69,4 @@ async function getCourses () {
         .countDocuments()
         console.log(courses)        
 }
- getCourses()
+getCourses()
