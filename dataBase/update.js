@@ -31,8 +31,10 @@ const Course = mongoose.model('Course', courseSchema)
 //     const course = await Course.findById(id)
 
 //     if(!course) return
+
 //     // course.isPublished = true
 //     // course.author = 'Another Course'
+       //The two lines above are alternative to the course.set() method
 
 //     course.set({
 //         isPublished: true,
@@ -64,4 +66,5 @@ async function removeCourse (id) {
 
 // updateCourse('5f598ce43df3ea2ca89ad1a2')
 
-removeCourse("5f598a1006fbb02a000b15bc")
+// removeCourse("5f598a1006fbb02a000b15bc")
+
