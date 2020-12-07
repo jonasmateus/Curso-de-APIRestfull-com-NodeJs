@@ -1,57 +1,80 @@
+const mongoose =require('mongoose') 
 const Joi = require("joi");
 const express = require('express');
 const app = express();
 
 app.use(express.json());
 
-const genres = [
-  { id: 1, name: 'Action' },  
-  { id: 2, name: 'Horror' },  
-  { id: 3, name: 'Romance' },  
-];
+async function connectToMongo() {
+  return await mongoose.connect('mongodb://localhost/vidly', {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+          useFindAndModify: false,
+          useCreateIndex: true
+  })
+}
 
-app.get('/api/genres', (req, res) => {
-  res.send(genres);
-  console.log(genres)
+const myMongoDBConnection = connectToMongo()
+
+myMongoDBConnection
+  .then(() => console.log('Connection to MongoDB was sucessfully!'))
+  .catch(error => console.log(`Connection error: ${error}`) )
+
+
+const genreSchema = new mongoose.Schema({
+  name:{
+    type: String,
+    required: true,
+    minlength: 5,
+    maxlength: 50
+  }
+})
+
+const Genre = mongoose.model('Genre', genreSchema)
+
+app.get('/vidly', async (req, res) => {
+  const genres = await Genre.find().sort('name')
+  res.send(genres)
 });
 
-app.post('/api/genres', (req, res) => {
+app.post('/vidly', async (req, res) => {
   const { error } = validateGenre(req.body); 
   if (error) return res.status(400).send(error.details[0].message);
 
-  const genre = {
-    id: genres.length + 1,
-    name: req.body.name
-  };
-  genres.push(genre);
-  res.send(genre);
+  const genre = new Genre({ name: req.body.name })
+  const result = await genre.save();
+
+  res.send(result);
 });
 
-app.put('/api/genres/:id', (req, res) => {
-  const genre = genres.find(c => c.id === parseInt(req.params.id));
-  if (!genre) return res.status(404).send('The genre with the given ID was not found.');
-
+app.put('/vidly/:id', async (req, res) => {
+  
   const { error } = validateGenre(req.body); 
   if (error) return res.status(400).send(error.details[0].message);
-  
-  genre.name = req.body.name;
-  res.send(genre);
-  
-});
 
-app.delete('/api/genres/:id', (req, res) => {
-  const genre = genres.find(c => c.id === parseInt(req.params.id));
+  const genre = await Genre.findByIdAndUpdate(req.params.id, { name: req.body.name }, {
+    new: true
+  })
+
   if (!genre) return res.status(404).send('The genre with the given ID was not found.');
-
-  const index = genres.indexOf(genre);
-  genres.splice(index, 1);
-
+  
   res.send(genre);
 });
 
-app.get('/api/genres/:id', (req, res) => {
-  const genre = genres.find(c => c.id === parseInt(req.params.id));
+app.delete('/vidly/:id', async (req, res) => {
+
+  const genre = await Genre.findByIdAndRemove(req.params.id) 
+  
   if (!genre) return res.status(404).send('The genre with the given ID was not found.');
+
+  res.send(genre);
+});
+
+app.get('/vidly/:id', async (req, res) => {
+
+  const genre = await Genre.findById(req.params.id)
+  if (!genre) return res.status(404).send('The genre with the given ID was not found.');
+
   res.send(genre);
 });
 
